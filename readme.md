@@ -1,7 +1,7 @@
 # Internship project 
-My internship project is part of the APPROCHE(-S) study. The first part of this document describes the study and the second part describes my internship project.
+My internship project is part of the APPROCHE(-S) study (CHU Nîmes, department of physical medicine and rehabilitation). The first part of this document describes the study and the second part describes my internship project.
 
-## Project Title: APPROCHE(-S) (CHU Nîmes, department of physical medicine and rehabilitation)
+## Project Title: APPROCHE(-S) 
 
 ### Objective of the study
 Describe predictive Factors for the Success of Rehabilitation Programs in Chronic Low Back Pain. The study is based on activity limitation and associated factors that can predict the success of rehabilitation programs (Psychological, physical, social factors).  
