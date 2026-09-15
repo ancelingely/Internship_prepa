@@ -30,7 +30,7 @@ Steps : raw signal - quality assesment - preprocessing -
 
 
 
-## Validation of walking data
+## 2 Validation of walking data
 A more practical and methodological section dedicated to walking, a potential basis for a future, more detailed data analysis. We have an ActiGraph worn on the hip for 7 days, but it is necessary to validate precisely what we are able to extract from it regarding walking episodes and certain characteristics of this activity.
 Pilot phase followed by an independent validation, using the Qualisys laboratory and force platforms as references, as well as a small semi-ecological course filmed (BORIS).
 
