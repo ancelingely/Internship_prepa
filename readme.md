@@ -11,24 +11,17 @@ The project is divided into two parts (described below) :
 ### Reference framework 
 **LBP and physical activity** : Physical activity is a key factor in management of CLBP. A prospective study on a 71 600 subjects cohort (UK biobank) showed that moderate physical activity and a 60 min/day duration was associated with a lower risk of developing CLBP (1). But, there is a lack of knowledge regarding the distribution of physical activity in patients with CLBP, and the way in which it is accumulated or fragmented.
 
-**Wearable-specific indicators of PA behavior (WIPAB)** : Counts are the most commonly used metric. It is derived from the raw acceleration signal using a proprietary algorithm. However, this method has limitations related to its dependence on the ActiGraph algorithm. 
-
-Raw data potentially allow extracting richer and more comparable metrics. 
-
-ENMO provides a continuous measure of movement intensity derived from raw triaxial accelerometer data (5). Beyond simply calculating the average ENMO over a day, its distribution can be described using percentiles (e.g., P25, P50, P75, P90), which indicate the range and intensity of movement performed by an individual. However, percentiles do not provide information about the temporal organization of activity. To go further, the sequence of ENMO values over time can be studied to determine how activity is accumulated, fragmented, and organized, for example by examining transitions between different intensity levels, bout duration, or the regularity and complexity of activity sequences.
-
-Other methods exists, divided into 3 categories : activity intensity distribution (intensity gradient, MX metric), activity accumulation (power law exponent alpha, median bout lenght, Proportion of total time accumulated in bouts longer than x, Gini index), and temporal correlation and regularity (Scaling exponent alpha, Autocorrelation coefficient at lag k, Fourier analysis, sample entropy, Lempel-Ziv complexity, Permutation Lempel-Ziv complexity, Symbolic dynamics).(4)
-
-
 ### Data description 
 Accelerometer WGT3-X BT : acceleration + gravitational composante + noise 
 Steps : raw signal - quality assesment - preprocessing - 
 
 ### Analysis of accelerometer data
-#### Which metric ?
-**Counts** : Counts represent a classical and widely used approach to characterize the volume and intensity of physical activity. Raw data potentially allow extracting richer and more comparable metrics. (chatgpt). Counts represent the number of times the acceleration signal crosses a threshold within a given epoch (time window). The algorithm used to calculate counts is proprietary and may vary between different devices and manufacturers. However, they have limitations related to their dependence on the ActiGraph algorithm.
+#### Wearable-specific indicators of PA behavior (WIPAB)** ?
+**Counts** are the most commonly used metric. It is derived from the raw acceleration signal using a proprietary algorithm. However, this method has limitations related to its dependence on the ActiGraph algorithm. Raw data potentially allow extracting richer and more comparable metrics. 
 
+**ENMO** provides a continuous measure of movement intensity derived from raw triaxial accelerometer data (5). Beyond simply calculating the average ENMO over a day, its distribution can be described using percentiles (e.g., P25, P50, P75, P90), which indicate the range and intensity of movement performed by an individual. However, percentiles do not provide information about the temporal organization of activity. To go further, the sequence of ENMO values over time can be studied to determine how activity is accumulated, fragmented, and organized, for example by examining transitions between different intensity levels, bout duration, or the regularity and complexity of activity sequences.
 
+Other methods exists, divided into 3 categories : activity intensity distribution (intensity gradient, MX metric), activity accumulation (power law exponent alpha, median bout lenght, Proportion of total time accumulated in bouts longer than x, Gini index), and temporal correlation and regularity (Scaling exponent alpha, Autocorrelation coefficient at lag k, Fourier analysis, sample entropy, Lempel-Ziv complexity, Permutation Lempel-Ziv complexity, Symbolic dynamics).(4)
 
 ## 2 Validation of walking data
 A more practical and methodological section dedicated to walking, a potential basis for a future, more detailed data analysis. We have an ActiGraph worn on the hip for 7 days, but it is necessary to validate precisely what we are able to extract from it regarding walking episodes and certain characteristics of this activity.
