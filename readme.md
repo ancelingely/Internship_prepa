@@ -51,8 +51,9 @@ ENMO : Euclidean Norm Minus One (6),
     A measure of acceleration intensity derived from raw triaxial accelerometer data. It is calculated by taking the square root of the sum of the squares of the three axes, subtracting 1g (the gravitational component), and setting negative values to zero. ENMO provides a continuous measure of movement intensity, allowing for the assessment of physical activity levels throughout the day. 
 
     $$
-    ENMO = \sqrt{x^2 + y^2 + z^2} - 1g
-    $$ 
+    ENMO = \max\left(\sqrt{x^2 + y^2 + z^2} - 1g,\ 0\right)
+    $$
+
     Results are expressed in milligravity (mg) units, where 1 mg = 0.001 g.
 
     For the main analysis, the ENMO calculation will be implemented directly in **Python** in order to maintain control and transparency over each step of the computation. The resulting ENMO values will then be compared with those obtained using **GGIR in R** on the same raw ActiGraph data. This comparison will provide a reference check for the Python implementation and help assess the consistency and reproducibility of the processing pipeline.
@@ -64,7 +65,9 @@ ENMO : Euclidean Norm Minus One (6),
 MAD : Mean Absolute Deviation (6), 
     A measure of the average absolute difference between each data point and the mean. It is used to assess the variability of the acceleration signal. It is calculated by taking the absolute difference between each data point and the mean, summing these differences, and dividing by the total number of data points. MAD provides insight into the variability of movement intensity over time.
 
-    $$MAD = \frac{1}{n} \sum_{i=1}^{n} |x_i - \bar{x}|$$
+$$
+MAD = \frac{1}{n} \sum_{i=1}^{n} \left|x_i - \bar{x}\right|
+$$
 
 
 Intensity gradient : 
@@ -77,9 +80,9 @@ Intensity gradient :
 Exemple : 
 | Participant | Typical activity pattern | ENMO | MAD | Intensity Gradient (IG) |
 |---|---|---|---|---|
-| 👵 **Older active adult** | Very active throughout the day, with many low-intensity movements and short trips | Could be similar to the other participants | **Relatively low** if movements are regular and smooth | **More negative** — most time is accumulated at low intensities |
-| 👨 **30-year-old office worker** | Mostly sedentary during working hours, followed by ~2 h of vigorous exercise | Could be similar to the other participants | **Variable**, depending on the activity | **Less negative** — more time is accumulated at higher intensities |
-| 📦 **Delivery worker** | Frequent transitions, walking, carrying parcels and short periods of faster movement | Could be similar to the other participants | **Relatively high** due to frequent changes in acceleration | **Less negative** — activity is distributed across a wider range of intensities |
+| **Older active adult** | Very active throughout the day, with many low-intensity movements and short trips | Could be similar to the other participants | **Relatively low** if movements are regular and smooth | **More negative** — most time is accumulated at low intensities |
+| **30-year-old office worker** | Mostly sedentary during working hours, followed by ~2 h of vigorous exercise | Could be similar to the other participants | **Variable**, depending on the activity | **Less negative** — more time is accumulated at higher intensities |
+| **Delivery worker** | Frequent transitions, walking, carrying parcels and short periods of faster movement | Could be similar to the other participants | **Relatively high** due to frequent changes in acceleration | **Less negative** — activity is distributed across a wider range of intensities |
 
 **B. Accumulation / fragmentation** 
 Comment le mouvement et les périodes de faible mouvement sont-ils accumulés ? Durées de bouts, proportion en bouts longs, fragmentation, transitions.
