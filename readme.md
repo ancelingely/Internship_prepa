@@ -43,39 +43,41 @@ Two open-source approaches can be considered for the pre-processing of the raw a
 #### Wearable-specific indicators of PA behavior (WIPAB)** ?
 Counts are the most commonly used metric. It is derived from the raw acceleration signal using a proprietary algorithm. However, this method has limitations related to its dependence on the ActiGraph algorithm. Raw data potentially allow extracting richer and more comparable metrics. 
 
-**A. Exposition / quantité**
+##### A. Exposition / quantité
 How much and at what intensity does the person move?
 ENMO, MAD, intensity gradient, MX metrics,temps par niveaux d’intensité.
 
-ENMO : Euclidean Norm Minus One (6), 
-    A measure of acceleration intensity derived from raw triaxial accelerometer data. It is calculated by taking the square root of the sum of the squares of the three axes, subtracting 1g (the gravitational component), and setting negative values to zero. ENMO provides a continuous measure of movement intensity, allowing for the assessment of physical activity levels throughout the day. 
+**ENMO : Euclidean Norm Minus One (6)** 
+A measure of acceleration intensity derived from raw triaxial accelerometer data. It is calculated by taking the square root of the sum of the squares of the three axes, subtracting 1g (the gravitational component), and setting negative values to zero. ENMO provides a continuous measure of movement intensity, allowing for the assessment of physical activity levels throughout the day. 
 
 $$
 ENMO = \max(\sqrt{x^2 + y^2 + z^2} - 1g, 0)
 $$
 
-    Results are expressed in milligravity (mg) units, where 1 mg = 0.001 g.
+    
+Results are expressed in milligravity (mg) units, where 1 mg = 0.001 g.
 
-    For the main analysis, the ENMO calculation will be implemented directly in **Python** in order to maintain control and transparency over each step of the computation. The resulting ENMO values will then be compared with those obtained using **GGIR in R** on the same raw ActiGraph data. This comparison will provide a reference check for the Python implementation and help assess the consistency and reproducibility of the processing pipeline.
+For the main analysis, the ENMO calculation will be implemented directly in **Python** in order to maintain control and transparency over each step of the computation. The resulting ENMO values will then be compared with those obtained using **GGIR in R** on the same raw ActiGraph data. This comparison will provide a reference check for the Python implementation and help assess the consistency and reproducibility of the processing pipeline.
 
-    An epoch can be defined to aggregate the ENMO values over a specific time window (e.g., 1 second, 1 minute) to facilitate further analysis and interpretation of physical activity patterns.It is calculated as the average of the ENMO values within the epoch.
+An epoch can be defined to aggregate the ENMO values over a specific time window (e.g., 1 second, 1 minute) to facilitate further analysis and interpretation of physical activity patterns.It is calculated as the average of the ENMO values within the epoch.
    
-    The ENMO values can be used to classify physical activity into different intensity levels (e.g., sedentary, light, moderate, vigorous) based on established cut-points or thresholds.
+The ENMO values can be used to classify physical activity into different intensity levels (e.g., sedentary, light, moderate, vigorous) based on established cut-points or thresholds.
 
-MAD : Mean Absolute Deviation (6), 
-    A measure of the average absolute difference between each data point and the mean. It is used to assess the variability of the acceleration signal. It is calculated by taking the absolute difference between each data point and the mean, summing these differences, and dividing by the total number of data points. MAD provides insight into the variability of movement intensity over time.
+**MAD : Mean Absolute Deviation (6)**, 
+A measure of the average absolute difference between each data point and the mean. It is used to assess the variability of the acceleration signal. It is calculated by taking the absolute difference between each data point and the mean, summing these differences, and dividing by the total number of data points. MAD provides insight into the variability of movement intensity over time.
 
 $$
 MAD = \frac{1}{n} \sum_{i=1}^{n} \left|x_i - \bar{x}\right|
 $$
 
 
-Intensity gradient : 
-    A measure that describes the distribution of physical activity intensity across different levels, providing insight into how much time is spent at various intensities. It necessarily requires a continuous measure of intensity such as ENMO. The intensity of each epoch is calculated, and the time spent at each intensity level is determined. The intensity gradient is then derived by plotting the cumulative time spent at each intensity level against the corresponding intensity values. 
-    
-    The gradient (slope) of this regression describes the distribution of activity intensity: a more negative gradient indicates that time is more strongly concentrated at lower intensities, whereas a less negative gradient indicates a more even distribution of time across the intensity spectrum. 
 
-    Rather than classifying physical activity using predefined intensity cut-points, the Intensity Gradient describes the continuous relationship between activity intensity and the time accumulated at each intensity.
+**Intensity gradient : **
+A measure that describes the distribution of physical activity intensity across different levels, providing insight into how much time is spent at various intensities. It necessarily requires a continuous measure of intensity such as ENMO. The intensity of each epoch is calculated, and the time spent at each intensity level is determined. The intensity gradient is then derived by plotting the cumulative time spent at each intensity level against the corresponding intensity values. 
+    
+The gradient (slope) of this regression describes the distribution of activity intensity: a more negative gradient indicates that time is more strongly concentrated at lower intensities, whereas a less negative gradient indicates a more even distribution of time across the intensity spectrum. 
+
+Rather than classifying physical activity using predefined intensity cut-points, the Intensity Gradient describes the continuous relationship between activity intensity and the time accumulated at each intensity.
 
 Exemple : 
 | Participant | Typical activity pattern | ENMO | MAD | Intensity Gradient (IG) |
@@ -84,14 +86,14 @@ Exemple :
 | **30-year-old office worker** | Mostly sedentary during working hours, followed by ~2 h of vigorous exercise | Could be similar to the other participants | **Variable**, depending on the activity | **Less negative** — more time is accumulated at higher intensities |
 | **Delivery worker** | Frequent transitions, walking, carrying parcels and short periods of faster movement | Could be similar to the other participants | **Relatively high** due to frequent changes in acceleration | **Less negative** — activity is distributed across a wider range of intensities |
 
-**B. Accumulation / fragmentation** 
+##### Accumulation / fragmentation
 Comment le mouvement et les périodes de faible mouvement sont-ils accumulés ? Durées de bouts, proportion en bouts longs, fragmentation, transitions.
 
-**C. Organisation temporelle**
+##### Organisation temporelle
 Quand l’activité survient-elle et à quel point lepr ofil est-il stable d’un jour à l’autre ?
 Profils horaires, variabilité interjour, weekday/weekend, similarité de profils.
 
-**D. Répertoire / complexité** 
+##### Répertoire / complexité 
 Combien d’états différents sont utilisés et comment s’enchaînent-ils ?
 Occupancy, entropies, Lempel-Ziv, états HSMM, transitions.
 
