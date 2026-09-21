@@ -50,9 +50,9 @@ ENMO, MAD, intensity gradient, MX metrics,temps par niveaux d’intensité.
 ENMO : Euclidean Norm Minus One (6), 
     A measure of acceleration intensity derived from raw triaxial accelerometer data. It is calculated by taking the square root of the sum of the squares of the three axes, subtracting 1g (the gravitational component), and setting negative values to zero. ENMO provides a continuous measure of movement intensity, allowing for the assessment of physical activity levels throughout the day. 
 
-    $$
-    ENMO = \max\left(\sqrt{x^2 + y^2 + z^2} - 1g,\ 0\right)
-    $$
+$$
+ENMO = \max(\sqrt{x^2 + y^2 + z^2} - 1g, 0)
+$$
 
     Results are expressed in milligravity (mg) units, where 1 mg = 0.001 g.
 
