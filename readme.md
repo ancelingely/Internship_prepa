@@ -21,11 +21,6 @@ faisabilité.
 12. Documentation complète : versions logicielles, paramètres, pseudo-code/diagramme du pipeline et
 décisions méthodologiques
 
-#### Work strategy
-1. Understand the data and the preprocessing steps : 
-    - Read the .gt3x files and extract the raw accelerometer data.
-    - Implement preprocessing steps such as calibration, filtering, and resampling.
-    - Validate the preprocessing pipeline against existing methods (e.g., GGIR in R).
 
 ## 1 Description of motor comportment
 From raw accelerometer data over 7 days to a multi-scale characterization of motor behavior and walking in real-life settings.
@@ -51,10 +46,10 @@ free living gait.
 
 
 ### Data description 
-Accelerometer WGT3-X BT : acceleration + gravitational composante + noise 
-position : right hip, vertical axis aligned with gravity, horizontal axis aligned with the sagittal plane. ?
+Accelerometer WGT3-X BT : acceleration + gravitational composante + noise.
+Position : right hip, vertical axis aligned with gravity, horizontal axis aligned with the sagittal plane. ?
 Sampling frequency : 100 Hz ?
-Duration : 7 days 
+Duration : 7 days.
 Epochs = 5 / 30 / 60 sec ? (test)
 
 ### Analysis of accelerometer data
@@ -70,13 +65,20 @@ The processing of raw accelerometer data will follow several main steps. First, 
 Two open-source approaches can be considered for the pre-processing of the raw accelerometer data: **actipy**, a Python-based toolbox that provides access to ActiGraph raw data and includes gravity-based calibration and signal processing, and **GGIR**(7), an R package widely used for processing raw accelerometer data and implementing automatic calibration.
 
 
-
 #### Wearable-specific indicators of PA behavior (WIPAB)** ?
 Counts are the most commonly used metric. It is derived from the raw acceleration signal using a proprietary algorithm. However, this method has limitations related to its dependence on the ActiGraph algorithm. Raw data potentially allow extracting richer and more comparable metrics. 
 
-##### A. Exposition / quantité / Intensity / distribution
-How much and at what intensity does the person move?
-ENMO, MAD, intensity gradient, MX metrics,temps par niveaux d’intensité.
+According to Backes et al. (4), physical activity behavior can be characterized through three complementary dimensions: activity intensity distribution, activity accumulation over time, and temporal organization, including the correlation and regularity of activity patterns. these dimensions are complementary and provide a comprehensive understanding of an individual's physical activity behavior. 
+
+Exemple : 
+| Participant | Typical activity pattern | Activity intensity distribution | Activity accumulation | Temporal correlation |
+|---|---|---|---|---|
+| **Older active adult** | Very active throughout the day, with many low-intensity movements and short trips | **More concentrated at low intensities** — potentially a more negative IG | **Highly fragmented** — many short bouts and relatively few long bouts | **Potentially stronger short-term correlations** if similar activity levels tend to follow one another |
+| **30-year-old office worker** | Mostly sedentary during working hours, followed by ~2 h of vigorous exercise | **More spread toward higher intensities** — potentially a less negative IG | **More concentrated** — long sedentary periods and potentially long exercise bouts | **Strong temporal structure at specific time scales** — prolonged sedentary work periods followed by exercise |
+| **Delivery worker** | Frequent transitions, walking, carrying parcels and short periods of faster movement | **Broad distribution of intensities** — activity spread across low-to-high intensities | **Fragmented but active** — many relatively short activity bouts and frequent transitions | **Potentially weaker/complex short-term regularity** because activity fluctuates frequently throughout the day |
+
+
+##### A.Activity accumulation
 
 **ENMO : Euclidean Norm Minus One (6)** 
 A measure of acceleration intensity derived from raw triaxial accelerometer data. It is calculated by taking the square root of the sum of the squares of the three axes, subtracting 1g (the gravitational component), and setting negative values to zero. ENMO provides a continuous measure of movement intensity, allowing for the assessment of physical activity levels throughout the day. 
@@ -103,6 +105,19 @@ $$
 
 Mad also needs a time periode to be specified. A 5-second time period can be considered adequate for reporting different activities (6). 
 
+###### Thresholds
+Several ENMO thresholds have been proposed to classify physical activity intensity. For example, Hildebrand et al. (2016) identified thresholds for sedentary, light, moderate, and vigorous activity using raw acceleration data collected with an ActiGraph accelerometer worn at the hip in adults (9). Thresholds are useful to define bouts of activity or inactivity. 
+
+**Bouts** : cotinous periods of activity or inactivity, defined based on a threshold of movement intensity (e.g., ENMO). Bouts can be characterized by their duration, frequency, and distribution throughout the day.
+
+
+##### B.Temporal correlation and regularity
+Combien d’états différents sont utilisés et comment s’enchaînent-ils ?
+Occupancy, entropies, Lempel-Ziv, états HSMM, transitions.
+Quand l’activité survient-elle et à quel point le profil est-il stable d’un jour à l’autre ?
+Profils horaires, variabilité interjour, weekday/weekend, similarité de profils.
+
+##### C. Activity intensity distribution
 **Intensity gradient (8):**
 A measure that describes the distribution of physical activity intensity across different levels, providing insight into how much time is spent at various intensities. It necessarily requires a continuous measure of intensity such as ENMO. The intensity of each epoch is calculated, and the time spent at each intensity level is determined. The intensity gradient is then derived by plotting the cumulative time spent at each intensity level against the corresponding intensity values. 
     
@@ -110,59 +125,12 @@ The gradient (slope) of this regression describes the distribution of activity i
 
 Rather than classifying physical activity using predefined intensity cut-points, the Intensity Gradient describes the continuous relationship between activity intensity and the time accumulated at each intensity.
 
-Exemple : 
-| Participant | Typical activity pattern | ENMO | MAD | Intensity Gradient (IG) |
-|---|---|---|---|---|
-| **Older active adult** | Very active throughout the day, with many low-intensity movements and short trips | Could be similar to the other participants | **Relatively low** if movements are regular and smooth | **More negative** — most time is accumulated at low intensities |
-| **30-year-old office worker** | Mostly sedentary during working hours, followed by ~2 h of vigorous exercise | Could be similar to the other participants | **Variable**, depending on the activity | **Less negative** — more time is accumulated at higher intensities |
-| **Delivery worker** | Frequent transitions, walking, carrying parcels and short periods of faster movement | Could be similar to the other participants | **Relatively high** due to frequent changes in acceleration | **Less negative** — activity is distributed across a wider range of intensities |
 
-##### B.Accumulation / fragmentation
-Comment le mouvement et les périodes de faible mouvement sont-ils accumulés ? Durées de bouts, proportion en bouts longs, fragmentation, transitions.
-
-**Bouts** : cotinous periods of activity or inactivity, defined based on a threshold of movement intensity (e.g., ENMO). Bouts can be characterized by their duration, frequency, and distribution throughout the day.
-
-2 levels : 
-Niveau 1 - WALK :Identify the largest possible locomotor episodes, including small bouts, turns, and reasonable domestic walks.Prefer an initial detection that is robust to orientation (vector magnitude, periodicity, autocorrelation/spectral), complemented if necessary by a rejection of false positives.
-
-Niveau 2 - QUALITY-ELIGIBLE WALK :Quality-eligible walk : apply specific length, quality, and stationarity criteria to the metrics. Prefer an initial detection that is robust to orientation (vector magnitude, periodicity, autocorrelation/spectral), reject false positives if necessary.
-
-Rule : No concatenation of bouts, even if they are close in time. The goal is to describe the distribution of bouts and their characteristics, not to create a continuous walking episode that would destroyed the structure of the data.
-
-Methodological question : should a U-turn cut a walking bout ? The protocol must allow to compare several rules : keep the turn in the bout, exclude only a short area around the turn, or cut the bout in two. The choice will be evaluated according to its effect on walking time, number of bouts and P90 of duration.
-
-The stride number in a bout leads to different type of analysis : 
-<30  : Cadence, mean stride time, regularity et spectre simples.
-~30+  : SampEn candidate.
-~50-75+ : HKp exploratoire ; RQA commence à devenir envisageable.
-~100+ HKp : principal ; RQA plus solide ; MSE/RCMSE selon paramètres.
-~100-150+ : LDS / ACI candidates.
-~500-600+ : DFA stride-time, en sous-échantillon de longues marches.
-
-##### C.Organisation temporelle
-Quand l’activité survient-elle et à quel point lepr ofil est-il stable d’un jour à l’autre ?
-Profils horaires, variabilité interjour, weekday/weekend, similarité de profils.
-
-##### D. Répertoire / complexité 
-Combien d’états différents sont utilisés et comment s’enchaînent-ils ?
-Occupancy, entropies, Lempel-Ziv, états HSMM, transitions.
-
-
-
-
-**ENMO** provides a continuous measure of movement intensity derived from raw triaxial accelerometer data (5). Beyond simply calculating the average ENMO over a day, its distribution can be described using percentiles (e.g., P25, P50, P75, P90), which indicate the range and intensity of movement performed by an individual. However, percentiles do not provide information about the temporal organization of activity. To go further, the sequence of ENMO values over time can be studied to determine how activity is accumulated, fragmented, and organized, for example by examining transitions between different intensity levels, bout duration, or the regularity and complexity of activity sequences.
-
-Other methods exists, divided into 3 categories : activity intensity distribution (intensity gradient, MX metric), activity accumulation (power law exponent alpha, median bout lenght, Proportion of total time accumulated in bouts longer than x, Gini index), and temporal correlation and regularity (Scaling exponent alpha, Autocorrelation coefficient at lag k, Fourier analysis, sample entropy, Lempel-Ziv complexity, Permutation Lempel-Ziv complexity, Symbolic dynamics).(4)
 
 ## 2 Validation of walking data
 A more practical and methodological section dedicated to walking, a potential basis for a future, more detailed data analysis. We have an ActiGraph worn on the hip for 7 days, but it is necessary to validate precisely what we are able to extract from it regarding walking episodes and certain characteristics of this activity.
 Pilot phase followed by an independent validation, using the Qualisys laboratory and force platforms as references, as well as a small semi-ecological course filmed (BORIS).
 
-### Reference framework
-Activity classification can be done using several methods. Previous study used actigraph to classify different types of physical activity : walking, standing, stair climbing, running, cycling, lying down... The classification was based on three different method classifier : Rule base/cut-point, traditionnal machine learning (decision trees, random forests...), deep learning (CNN, RNN...). Validity was assessed using video - synchronised ground truth, other ground truth, K-folp / loso. Codes are available on github for 16 of these studies. 
-
-
-### 
 
 
 ## References 
@@ -181,4 +149,6 @@ Activity classification can be done using several methods. Previous study used a
 7. van Hees VT, Fang Z, Langford J, Assah F, Mohammad A, da Silva ICM, et al. Autocalibration of accelerometer data for free-living physical activity assessment using local gravity and temperature: an evaluation on four continents. J Appl Physiol (1985). 1 oct 2014;117(7):738‑44. doi:10.1152/japplphysiol.00421.2014 PubMed PMID: 25103964; PubMed Central PMCID: PMC4187052.
 
 8. Rowlands AV, Edwardson CL, Davies MJ, Khunti K, Harrington DM, Yates T. Beyond Cut Points: Accelerometer Metrics that Capture the Physical Activity Profile. Medicine & Science in Sports & Exercise. juin 2018;50(6):1323‑32. doi:10.1249/MSS.0000000000001561
+
+9. https://www.maths.bris.ac.uk/R/web/packages/GGIR/vignettes/CutPoints.html?utm_source 
 
