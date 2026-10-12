@@ -125,7 +125,7 @@ The method is available on github (11)
 
 Exemple (from Chinapaw et al, 2019) :
 
-![sequence_map.png](Images/sequence_map.png)
+![sequence_map.png](Images/sequence_map.PNG)
 
 
 The problem is that the clustering approach may group together sequences that are similar in terms of the states used, but not necessarily in terms of the order in which they occur. This could lead to a loss of temporal information and succession of states.  The use of hierarchical clustering (hclust in R) does not, in itself, guarantee that temporal order is preserved. 
