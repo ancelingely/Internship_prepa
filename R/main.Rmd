@@ -1,0 +1,35 @@
+---
+title: "Open gt3x data"
+author: "Ancelin"
+date: "`r format(Sys.time(), '%d %B, %Y, %H:%M')`"
+output:
+  html_document:
+    df_print: paged
+    code_folding: hide
+    toc: false
+    number_sections: true
+---
+
+```{r}
+install.packages("read.gt3x")
+library(read.gt3x)
+
+path <- "data/C01P000.gt3x"
+x <- read.gt3x(path, asDataFrame = TRUE, imputeZeroes = TRUE)
+head(x)
+```
+```{r}
+getwd()                                   # dossier dans lequel R travaille
+file.exists("data/C01P000.gt3x")          # TRUE ou FALSE ?
+file.size("data/C01P000.gt3x")            # taille en octets (NA si introuvable)
+```
+```{r}
+path <- file.choose()   # une fenêtre s'ouvre, sélectionne ton .gt3x
+print(path)             # affiche le chemin complet : garde-le
+file.exists(path)       # doit renvoyer TRUE
+file.size(path)         # doit être proche de 271 000 000 octets
+
+x <- read.gt3x::read.gt3x(path, asDataFrame = TRUE, imputeZeroes = TRUE)
+head(x)
+```
+
