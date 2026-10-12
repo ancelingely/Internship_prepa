@@ -116,10 +116,10 @@ Mad also needs a time periode to be specified. A 5-second time period can be con
 
 ##### B.Temporal correlation and regularity
 
-**Sequence maps**: 
+###### B.1. Sequence maps:
 The objective of this par is to determine how many different states are used and how do they follow each other. 
 
-This can be done by creating a sequence map (10), which is a visual representation of the transitions between different states over time.  Chinapaw et al (10) used accelereometrics counts to measure intensity (SB, LPA, MPA, and VPA) and duration (sporadic accumulation or in bouts of different duration) to code the activity into a sequence of states. The sequence map can then be analyzed with **Hierarchical cluster analysis** clusters with similar behavioral sequence maps. 
+This can be done by creating a sequence map (10), which is a visual representation of the transitions between different states over time.  Chinapaw et al (10) used accelereometrics counts to measure intensity (SB, LPA, MPA, and VPA) and duration (sporadic accumulation or in bouts of different duration) to code the activity into a sequence of states. The sequence map can then be analyzed with **Hierarchical cluster analysis** using different distance measures (Hamming, Optimal matching, Dynamic time warping) to identify patterns and similarities between sequences.
 
 The method is available on github (11)
 
@@ -128,19 +128,7 @@ Exemple (from Chinapaw et al, 2019) :
 ![sequence_map.png](Images/sequence_map.PNG)
 
 
-The problem is that the clustering approach may group together sequences that are similar in terms of the states used, but not necessarily in terms of the order in which they occur. This could lead to a loss of temporal information and succession of states.  The use of hierarchical clustering (hclust in R) does not, in itself, guarantee that temporal order is preserved. 
-
-The distance matrix is a key component in the clustering process, as it quantifies the dissimilarity between different sequences. Diffferents methods are possible : **Hamming, Optimal matching, Dynamic time warping**. 
-
-**Hamming distance** measures the number of positions at which two sequences differ. It is a simple and efficient method for comparing sequences of equal length (AABA vs ABAA = 2). However, it does not telarate temporal shifts wich make it to strict for daily activity sequences.
-
-**Optimal Matching** (OM) is a more flexible method that allows for insertions, deletions, and substitutions to align sequences of different lengths. It calculates the minimum cost of transforming one sequence into another, taking into account the order of states. This method is more suitable for comparing sequences with varying lengths and temporal shifts.
-
-The main problem of this method will be to determine the cost of each operation (insertion, deletion, substitution). The cost can be set to 1 for each operation, but this may not accurately reflect the true dissimilarity between sequences. For example, the substitution between two similar states (1/2/3 ; 4/5/6 ; 7/8/9) can be considered less costly than the substitution between two very different states (1/6). But we will have to determine if the suppression of intensive states is more costly than the suppression of sedentary states. This method also seems to be to strict to compare daily activity sequences.
-
-As our objective is to compare and analyze daily activity sequences while allowing for some temporal shifts, we will probably use DTW. 
-
-**Dynamic Time Warping (DTW)**
+## B.2. Dynamic Time Warping (DTW)
 
 DTW is a method that aligns two sequences in a way that minimizes the total distance between them, allowing for non-linear alignments. It is particularly useful for comparing time series data where the timing of events is important but not perfectly synchronized. It can be associate with the Sakoe–Chiba band that limits the warping path to a certain window (30 min) and prevent excessive warping.
 
