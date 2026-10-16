@@ -3,7 +3,7 @@ My internship project is part of the APPROCHE(-S) study (CHU Nîmes, department 
 
 The project is divided into two parts (described below) :
     - 1 : Precise description of motor comportment  
-    - 2 : Validation of walking data 
+    - 2 : Validation of walking data   
 
 #### Task list for the Master 2 internship work
 1. Reproducible pipeline for reading and preprocessing .gt3x files related to the gait branch.
